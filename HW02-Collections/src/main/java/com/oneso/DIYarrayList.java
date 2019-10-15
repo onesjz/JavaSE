@@ -6,14 +6,22 @@ public class DIYarrayList<T> implements List<T> {
 
     private Object[] elements;
 
+    private static final Object[] EMPTY = {};
+    private static final int DEFAULT_CAPACITY = 10;
+
     private int size;
 
-    public DIYarrayList(T[] elements) {
-        this.elements = elements;
-        size = elements.length;
-    }
+    public DIYarrayList(Collection<? extends T> collection) {
+        elements = collection.toArray();
 
-    public DIYarrayList(Collection<T> collection) {
+        if((size = elements.length) != 0) {
+            if(elements.getClass() != Object[].class)
+                elements = Arrays.copyOf(elements, size, Object[].class);
+        } else {
+            elements = EMPTY;
+        }
+
+
         this.elements = collection.toArray();
         size = elements.length;
     }
@@ -27,7 +35,7 @@ public class DIYarrayList<T> implements List<T> {
     }
 
     public DIYarrayList() {
-        this.elements = new Object[0];
+        this.elements = EMPTY;
         size = 0;
     }
 
@@ -79,14 +87,25 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public boolean add(T t) {
-        Object[] tempElements = new Object[size + 1];
-        if(size > 0) {
-            System.arraycopy(elements, 0, tempElements, 0, size);
+        if(size == elements.length) {
+            elements = grow();
         }
 
-        tempElements[size++] = t;
-        elements = tempElements;
+        elements[size] = t;
+        size++;
         return true;
+    }
+
+    private Object[] grow() {
+        int oldCapacity = elements.length;
+        if(oldCapacity > 0 || elements != EMPTY) {
+            int newCapacity = oldCapacity * 2;
+            Object[] tempElements = new Object[newCapacity];
+            System.arraycopy(elements, 0, tempElements, 0, size);
+            return tempElements;
+        } else {
+            return new Object[Math.max(DEFAULT_CAPACITY, size)];
+        }
     }
 
     @Override
@@ -158,7 +177,7 @@ public class DIYarrayList<T> implements List<T> {
 
     @Override
     public void clear() {
-        elements = new Object[0];
+        elements = EMPTY;
         size = 0;
     }
 
@@ -191,7 +210,10 @@ public class DIYarrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException("index < 0 || index > size");
 
         T oldType = (T) elements[index];
-        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        if(size - 1 > index) {
+            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        }
+        elements[size] = null;
         size--;
 
         return oldType;
@@ -288,5 +310,10 @@ public class DIYarrayList<T> implements List<T> {
     @Override
     public List<T> subList(int fromIndex, int toIndex) {
         throw new UnsupportedOperationException("Doesn't support");
+    }
+
+    @Override
+    public void sort(Comparator<? super T> c) {
+        Arrays.sort((T[]) elements, 0, size, c);
     }
 }
