@@ -20,10 +20,6 @@ public class DIYarrayList<T> implements List<T> {
         } else {
             elements = EMPTY;
         }
-
-
-        this.elements = collection.toArray();
-        size = elements.length;
     }
 
     public DIYarrayList(int initSize) {
