@@ -11,7 +11,7 @@
 
     <packaging>jar</packaging>
 
-    <artifactId>HW01-Maven</artifactId>
+    <artifactId>hw01-maven</artifactId>
     <name>HW01-Maven</name>
 
     <dependencies>
