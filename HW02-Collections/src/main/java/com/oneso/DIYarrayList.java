@@ -27,7 +27,6 @@ public class DIYarrayList<T> implements List<T> {
             throw new IllegalArgumentException("Size < 0");
 
         elements = new Object[initSize];
-        size = initSize;
     }
 
     public DIYarrayList() {
@@ -90,18 +89,6 @@ public class DIYarrayList<T> implements List<T> {
         elements[size] = t;
         size++;
         return true;
-    }
-
-    private Object[] grow() {
-        int oldCapacity = elements.length;
-        if(oldCapacity > 0 || elements != EMPTY) {
-            int newCapacity = oldCapacity * 2;
-            Object[] tempElements = new Object[newCapacity];
-            System.arraycopy(elements, 0, tempElements, 0, size);
-            return tempElements;
-        } else {
-            return new Object[Math.max(DEFAULT_CAPACITY, size)];
-        }
     }
 
     @Override
@@ -212,6 +199,12 @@ public class DIYarrayList<T> implements List<T> {
         elements[size] = null;
         size--;
 
+        int oldCapacity = elements.length;
+        if(oldCapacity > size) {
+            int newCapacity = (oldCapacity - size) / 2;
+            elements = (size == 0) ? EMPTY : Arrays.copyOf(elements, newCapacity);
+        }
+
         return oldType;
     }
 
@@ -311,5 +304,17 @@ public class DIYarrayList<T> implements List<T> {
     @Override
     public void sort(Comparator<? super T> c) {
         Arrays.sort((T[]) elements, 0, size, c);
+    }
+
+    private Object[] grow() {
+        int oldCapacity = elements.length;
+        if(oldCapacity > 0 || elements != EMPTY) {
+            int newCapacity = oldCapacity * 2;
+            Object[] tempElements = new Object[newCapacity];
+            System.arraycopy(elements, 0, tempElements, 0, size);
+            return tempElements;
+        } else {
+            return new Object[Math.max(DEFAULT_CAPACITY, size)];
+        }
     }
 }
