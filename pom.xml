@@ -20,6 +20,7 @@
     <modules>
         <module>HW01-Maven</module>
         <module>HW02-Collections</module>
+        <module>HW03-Annotations</module>
     </modules>
 
     <properties>
@@ -38,7 +39,8 @@
         <!-- endregion -->
 
         <!-- region Tests -->
-
+        <junit-jupiter-api.version>5.5.2</junit-jupiter-api.version>
+        <mockito-core.version>3.1.0</mockito-core.version>
         <!-- endregion -->
 
         <!-- region Plugins -->
@@ -46,6 +48,8 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven.compiler.parameters>true</maven.compiler.parameters>
         <!-- endregion -->
     </properties>
 
@@ -56,12 +60,32 @@
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit-jupiter-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito-core.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <compilerArgs>
+                            <arg>--enable-preview</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
