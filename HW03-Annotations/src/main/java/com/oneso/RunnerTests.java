@@ -17,7 +17,8 @@ public class RunnerTests {
             Map<String, Method> methodMap = getMapMethods(aClass.getDeclaredMethods());
 
             if(methodMap.containsKey("beforeAll"))
-                callMethod(methodMap.get("beforeAll"), null, false);
+                if(!callMethod(methodMap.get("beforeAll"), null, false))
+                    throw new RuntimeException("Не удалось подготовить данные для тестов");
 
             callMethods(aClass.getDeclaredMethods(), methodMap, aClass);
 
@@ -38,14 +39,26 @@ public class RunnerTests {
         Map<String, Method> out = new HashMap<>();
 
         for (Method method : methods) {
-            if (method.isAnnotationPresent(BeforeAll.class))
+            if (method.isAnnotationPresent(BeforeAll.class)) {
+                if(out.containsKey("beforeAll"))
+                    throw new IllegalArgumentException("Не допустимо создавать более одного метода BeforeAll");
                 out.put("beforeAll", method);
-            if (method.isAnnotationPresent(AfterAll.class))
+            }
+            if (method.isAnnotationPresent(AfterAll.class)) {
+                if(out.containsKey("afterAll"))
+                    throw new IllegalArgumentException("Не допустимо создавать более одного метода AfterAll");
                 out.put("afterAll", method);
-            if (method.isAnnotationPresent(Before.class))
+            }
+            if (method.isAnnotationPresent(Before.class)) {
+                if(out.containsKey("before"))
+                    throw new IllegalArgumentException("Не допустимо создавать более одного метода Before");
                 out.put("before", method);
-            if (method.isAnnotationPresent(After.class))
+            }
+            if (method.isAnnotationPresent(After.class)) {
+                if(out.containsKey("after"))
+                    throw new IllegalArgumentException("Не допустимо создавать более одного метода After");
                 out.put("after", method);
+            }
         }
         return out;
     }
@@ -70,16 +83,17 @@ public class RunnerTests {
         }
     }
 
-    private void callMethod(Method method, Object instance, boolean test) {
+    private boolean callMethod(Method method, Object instance, boolean test) {
         try {
             method.invoke(instance);
             if(test)
                 correct.add(method.getName());
-
+            return true;
         } catch (IllegalAccessException | InvocationTargetException e) {
             System.out.println("Не удалось выполнить метод: " + method.getName());
             if(test)
                 failed.add(method.getName());
+            return false;
         }
     }
 
