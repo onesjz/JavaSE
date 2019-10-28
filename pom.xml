@@ -2,115 +2,115 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.oneso</groupId>
-    <artifactId>javahw</artifactId>
-    <version>1.0-SNAPSHOT</version>
+  <groupId>com.oneso</groupId>
+  <artifactId>javahw</artifactId>
+  <version>1.0-SNAPSHOT</version>
 
-    <packaging>pom</packaging>
+  <packaging>pom</packaging>
 
-    <description>JavaSE HomeWork</description>
-    <developers>
-        <developer>
-            <name>Sergey</name>
-        </developer>
-    </developers>
+  <description>JavaSE HomeWork</description>
+  <developers>
+    <developer>
+      <name>Sergey</name>
+    </developer>
+  </developers>
 
-    <modules>
-        <module>HW01-Maven</module>
-        <module>HW02-Collections</module>
-        <module>HW03-Annotations</module>
-        <module>HW04-ASM</module>
-    </modules>
+  <modules>
+    <module>HW01-Maven</module>
+    <module>HW02-Collections</module>
+    <module>HW03-Annotations</module>
+    <module>HW04-ASM</module>
+  </modules>
 
-    <properties>
-        <!-- region General -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncodung>UTF-8</project.reporting.outputEncodung>
-        <java.version>13</java.version>
-        <!-- endregion -->
+  <properties>
+    <!-- region General -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncodung>UTF-8</project.reporting.outputEncodung>
+    <java.version>13</java.version>
+    <!-- endregion -->
 
-        <!-- region BOMs -->
+    <!-- region BOMs -->
 
-        <!-- endregion -->
+    <!-- endregion -->
 
-        <!-- region Libs -->
-        <guava.version>28.1-jre</guava.version>
-        <asm.version>7.2</asm.version>
-        <!-- endregion -->
+    <!-- region Libs -->
+    <guava.version>28.1-jre</guava.version>
+    <asm.version>7.2</asm.version>
+    <!-- endregion -->
 
-        <!-- region Tests -->
-        <junit-jupiter-api.version>5.5.2</junit-jupiter-api.version>
-        <mockito-core.version>3.1.0</mockito-core.version>
-        <!-- endregion -->
+    <!-- region Tests -->
+    <junit-jupiter-api.version>5.5.2</junit-jupiter-api.version>
+    <mockito-core.version>3.1.0</mockito-core.version>
+    <!-- endregion -->
 
-        <!-- region Plugins -->
-        <maven.compiler.release>${java.version}</maven.compiler.release>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
-        <maven.compiler.parameters>true</maven.compiler.parameters>
-        <!-- endregion -->
-    </properties>
+    <!-- region Plugins -->
+    <maven.compiler.release>${java.version}</maven.compiler.release>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
+    <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+    <maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
+    <maven.compiler.parameters>true</maven.compiler.parameters>
+    <!-- endregion -->
+  </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm</artifactId>
-                <version>${asm.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-commons</artifactId>
-                <version>${asm.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
-                <version>${junit-jupiter-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>${mockito-core.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm</artifactId>
+        <version>${asm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-commons</artifactId>
+        <version>${asm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${junit-jupiter-api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito-core.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven-compiler-plugin.version}</version>
-                    <configuration>
-                        <compilerArgs>
-                            <arg>--enable-preview</arg>
-                        </compilerArgs>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-shade-plugin</artifactId>
-                    <version>${maven-shade-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>${maven-assembly-plugin.version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+          <configuration>
+            <compilerArgs>
+              <arg>--enable-preview</arg>
+            </compilerArgs>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>${maven-shade-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>${maven-assembly-plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 
 </project>
