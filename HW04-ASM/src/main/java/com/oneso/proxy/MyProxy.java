@@ -5,6 +5,8 @@ import com.oneso.annotation.Log;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyProxy {
 
@@ -17,17 +19,17 @@ public class MyProxy {
   static class HandlerMethod implements InvocationHandler {
 
     private final MyInterface myInterface;
+    private final List<String> methodsLog;
 
     HandlerMethod(MyInterface myInterface) {
       this.myInterface = myInterface;
+      methodsLog = findMethodsWithLog(myInterface.getClass());
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-      Method originalMethod = myInterface.getClass().getMethod(method.getName(), method.getParameterTypes());
-
-      if (originalMethod.isAnnotationPresent(Log.class)) {
+      if(methodsLog.contains(method.getName())) {
         StringBuilder parameters = new StringBuilder(" ");
         if (args != null) {
           for (Object temp : args) {
@@ -35,10 +37,20 @@ public class MyProxy {
           }
         }
         System.out.println("Executed method: " + method.getName() + " Param: (" + parameters.toString() + ")");
-
-        return method.invoke(myInterface, args);
       }
       return method.invoke(myInterface, args);
+    }
+
+    private List<String> findMethodsWithLog(Class<?> aClass) {
+      List<String> out = new ArrayList<>();
+
+      Method[] methods = aClass.getDeclaredMethods();
+      for(Method temp : methods) {
+        if(temp.isAnnotationPresent(Log.class)) {
+          out.add(temp.getName());
+        }
+      }
+      return out;
     }
   }
 }

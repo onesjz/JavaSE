@@ -19,8 +19,6 @@ public class Agent {
   private static final String CLASS_NAME = "com/oneso/ASM/TypesLogging";
   private static final String PROXY_METHOD = "MagicLog";
 
-  private static Map<String, Type[]> methodsWithArgs = new HashMap<>();
-
   public static void premain(String agentArgs, Instrumentation inst) {
     System.out.println("Magic is coming");
     inst.addTransformer(new ClassFileTransformer() {
@@ -30,27 +28,26 @@ public class Agent {
                               ProtectionDomain protectionDomain,
                               byte[] classfileBuffer) {
         if (className.equals(CLASS_NAME)) {
-          return findAnnotationLog(classfileBuffer);
+          Map<String, Type[]> methodsWithArgs = findAnnotationLog(classfileBuffer);
+          if(!methodsWithArgs.isEmpty()) {
+            return changeMethod(classfileBuffer, methodsWithArgs);
+          }
         }
         return classfileBuffer;
       }
     });
   }
 
-  private static byte[] findAnnotationLog(byte[] classBuffer) {
+  private static Map<String, Type[]> findAnnotationLog(byte[] classBuffer) {
     ClassReader cr = new ClassReader(classBuffer);
     ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
     ClassVisitor cv = new MethodScanner(API, cw);
     cr.accept(cv, API);
 
-    if (!methodsWithArgs.isEmpty()) {
-      return changeMethod(classBuffer);
-    }
-
-    return cw.toByteArray();
+    return MethodScanner.AnnotationScanner.getMethodsWithArgs();
   }
 
-  private static byte[] changeMethod(byte[] classBuffer) {
+  private static byte[] changeMethod(byte[] classBuffer, Map<String, Type[]> methodsWithArgs) {
     ClassReader cr = new ClassReader(classBuffer);
     ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
     ClassVisitor cv = new ClassVisitor(API, cw) {
@@ -64,7 +61,7 @@ public class Agent {
       }
     };
     cr.accept(cv, API);
-    createMethod(cw);
+    createMethod(cw, methodsWithArgs);
 
     byte[] finalClass = cw.toByteArray();
     try (OutputStream fos = new FileOutputStream("ExampleProxyASM.class")) {
@@ -75,7 +72,7 @@ public class Agent {
     return finalClass;
   }
 
-  private static void createMethod(ClassWriter cw) {
+  private static void createMethod(ClassWriter cw, Map<String, Type[]> methodsWithArgs) {
     for (Map.Entry<String, Type[]> temp : methodsWithArgs.entrySet()) {
       Type[] types = temp.getValue();
       StringBuilder args = new StringBuilder(" ");
@@ -128,9 +125,9 @@ public class Agent {
 
     static class AnnotationScanner extends MethodVisitor {
 
-      private static final String ANNOTATION = "annotation/Log;";
       private String nameMethod;
       private Type[] descriptors;
+      private static Map<String, Type[]> methodsWithArgs = new HashMap<>();
 
       AnnotationScanner(int api, MethodVisitor methodVisitor, String name, String descriptor) {
         super(api, methodVisitor);
@@ -140,10 +137,15 @@ public class Agent {
 
       @Override
       public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
-        if (descriptor.endsWith(ANNOTATION)) {
+        String ANNOTATION = "Lcom/oneso/annotation/Log;";
+        if (descriptor.equals(ANNOTATION)) {
           methodsWithArgs.put(nameMethod, descriptors);
         }
         return super.visitAnnotation(descriptor, visible);
+      }
+
+      static Map<String, Type[]> getMethodsWithArgs() {
+        return methodsWithArgs;
       }
     }
   }
