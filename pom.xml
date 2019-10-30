@@ -22,6 +22,7 @@
     <module>HW02-Collections</module>
     <module>HW03-Annotations</module>
     <module>HW04-ASM</module>
+    <module>HW05-GC</module>
   </modules>
 
   <properties>
