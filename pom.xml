@@ -38,7 +38,7 @@
     <!-- endregion -->
 
     <!-- region Libs -->
-    <guava.version>28.1-jre</guava.version>
+    <guava.version>29.0-jre</guava.version>
     <asm.version>7.2</asm.version>
     <log4j.version>2.13.3</log4j.version>
     <!-- endregion -->
